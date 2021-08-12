@@ -1,0 +1,48 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+
+group = 'ga.uniquecoding'
+version = '0.1'
+
+sourceCompatibility = '16'
+targetCompatibility = '16'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc-repo'
+        url = 'https://papermc.io/repo/repository/maven-public/'
+    }
+
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven { url = "https://jitpack.io" }
+    maven { url = "https://repo.codemc.org/repository/maven-public/" }
+
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT'
+    implementation "dev.jorel.CommandAPI:commandapi-shade:6.3.0"
+}
+
+processResources {
+    filesMatching("**/*.yml") {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
+
+shadowJar {
+    relocate("dev.jorel.commandapi", "ga.uniquecoding.commandapi")
+}

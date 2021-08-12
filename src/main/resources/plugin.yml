@@ -1,0 +1,6 @@
+name: UniqueBeacons
+version: @version@
+main: ga.uniquecoding.uniquebeacons.UniqueBeacons
+api-version: 1.17
+authors: [ Sinha, HydroPage ]
+description: Custom beacons.
