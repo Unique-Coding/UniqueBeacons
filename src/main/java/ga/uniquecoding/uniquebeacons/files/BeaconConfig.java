@@ -17,7 +17,7 @@ public class BeaconConfig
     {
         file = new File
                 (Bukkit.getServer().getPluginManager().getPlugin
-                        ("UniqueBeacons").getDataFolder(), "beacons.yml");
+                        ("UniqueBeacons").getDataFolder(), "data.yml");
 
         if (!file.exists())
         {

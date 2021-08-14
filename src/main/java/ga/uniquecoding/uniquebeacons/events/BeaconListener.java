@@ -1,12 +1,15 @@
 package ga.uniquecoding.uniquebeacons.events;
 
-import ga.uniquecoding.uniquebeacons.BeaconManager;
 import ga.uniquecoding.uniquebeacons.UniqueBeacons;
 import ga.uniquecoding.uniquebeacons.files.BeaconConfig;
+import ga.uniquecoding.uniquebeacons.guis.Menu;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Beacon;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -35,17 +38,27 @@ public class BeaconListener implements Listener
             if (beacon.getTier() >= 1)
             {
 
-                player.sendMessage("your mom gay.");
+                if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                {
+                    event.setCancelled(true);
+                    Menu.openMainMenu(player, beacon);
+                }
 
+            }
+            else if (beacon.getTier() == 0)
+            {
+                if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                {
+                    event.setCancelled(true);
+                    player.sendMessage(ChatColor.RED + "You can't get into the beacon core if the beacon isn't active!");
+                }
             }
         }
     }
 
     @EventHandler
-    public void beaconOwner(BlockPlaceEvent event) throws IOException {
-        var player = event.getPlayer();
+    public void createData(BlockPlaceEvent event) {
         var block = event.getBlockPlaced();
-        var uuid = player.getUniqueId();
         var config = BeaconConfig.get();
 
 
@@ -54,17 +67,32 @@ public class BeaconListener implements Listener
         var z = block.getZ();
 
 
-        int count;
+        if (block.getType().equals(Material.BEACON))
+        {
+           config.createSection("beacons." + block.getLocation().getWorld().getName() + "(x:" + x + ",y:" + y + ",z:" + z + ").tier");
+           config.set("beacons." + block.getLocation().getWorld().getName() + "(x:" + x + ",y:" + y + ",z:" + z + ").tier", 1);
 
-        for(count = 1; count <= 100;count++)
+           BeaconConfig.save();
+
+        }
+    }
+
+    @EventHandler
+    public void removeData(BlockBreakEvent event) {
+        var block = event.getBlock();
+        var config = BeaconConfig.get();
+
+
+        var x = block.getX();
+        var y = block.getY();
+        var z = block.getZ();
+
 
         if (block.getType().equals(Material.BEACON))
         {
-           config.createSection(uuid.toString() + ".beacons." + count+ ".tier.xyz");
-           config.set(uuid.toString() + ".beacons." + count+ ".tier", 1);
-           config.set(uuid.toString() + ".beacons." + count+ ".xyz", x + ", " + y + ", " + z);
+            config.set("beacons." + block.getLocation().getWorld().getName() + "(x:" + x + ",y:" + y + ",z:" + z + ")", null);
 
-           BeaconConfig.save();
+            BeaconConfig.save();
 
         }
     }

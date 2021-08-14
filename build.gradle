@@ -28,13 +28,14 @@ repositories {
     }
     maven { url = "https://jitpack.io" }
     maven { url = "https://repo.codemc.org/repository/maven-public/" }
-
+    maven { url = "https://repo.mattstudios.me/artifactory/public/" }
 }
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
     compileOnly 'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT'
     implementation "dev.jorel.CommandAPI:commandapi-shade:6.3.0"
+    implementation "dev.triumphteam:triumph-gui:3.0.3"
 }
 
 processResources {
@@ -45,4 +46,5 @@ processResources {
 
 shadowJar {
     relocate("dev.jorel.commandapi", "ga.uniquecoding.commandapi")
+    relocate("dev.triumphteam.gui", "ga.uniquecoding.gui")
 }

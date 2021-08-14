@@ -13,37 +13,65 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainMenu
+public class Menu
 {
     public static void openMainMenu(Player player, Beacon b)
     {
         Gui gui = Gui.gui()
                 .title(Component.text("Beacon"))
-                .rows(26)
+                .rows(3)
                 .create();
 
-        GuiItem guiItem = ItemBuilder.from(Material.BEACON).asGuiItem();
-        
-        var beacon = guiItem.getItemStack();
-        var beaconmeta= guiItem.getItemStack().getItemMeta();
-        
-        beaconmeta.setDisplayName(ChatColor.AQUA + "Beacon Core");
+        GuiItem guiBeacon = ItemBuilder.from(Material.BEACON).asGuiItem();
+        GuiItem guiSunflower = ItemBuilder.from(Material.SUNFLOWER).asGuiItem();
 
-        List<String> lore = new ArrayList<>();
-        
-        lore.add("");
-        lore.add(ChatColor.GRAY + "Tier: " + ChatColor.GREEN + BeaconManager.getTier((Beacon) b));
-        lore.add(ChatColor.GRAY + "Speed:");
-        
-        
-        beaconmeta.setLore(lore);
+        var upgrade = guiSunflower.getItemStack();
+        var upgrademeta = guiSunflower.getItemStack().getItemMeta();
+        var beacon = guiBeacon.getItemStack();
+        var beaconmeta= guiBeacon.getItemStack().getItemMeta();
+        beaconmeta.setDisplayName(ChatColor.AQUA + "Beacon Core");
+        List<String> loreBeacon = new ArrayList<>();
+        loreBeacon.add(ChatColor.GRAY + "Tier: " + ChatColor.GREEN + BeaconManager.getTier(b));
+        loreBeacon.add(ChatColor.GRAY + "Radius: 100x100");
+        beaconmeta.setLore(loreBeacon);
 
         beacon.setItemMeta(beaconmeta);
 
-        gui.setItem(13, guiItem);
-        
+        gui.setItem(13, guiBeacon);
+
+        upgrademeta.setDisplayName(ChatColor.RED + "Upgrade to Tier " + BeaconManager.getTier(b) + 1);
+        List<String> loreUpgrade = new ArrayList<>();
+        loreUpgrade.add(ChatColor.GRAY + "Cost: " + ChatColor.GREEN + "$1,000");
+        loreUpgrade.add("");
+        loreUpgrade.add(ChatColor.YELLOW + "Click to upgrade!");
+
+        upgrademeta.setLore(loreUpgrade);
+        upgrade.setItemMeta(upgrademeta);
+
+        gui.setItem(16, guiSunflower);
 
         gui.getFiller().fill(ItemBuilder.from(Material.GRAY_STAINED_GLASS_PANE).asGuiItem());
+        gui.setDefaultClickAction(event ->
+        {
+            event.setCancelled(true);
+        });
+
+        gui.addSlotAction(16, event -> {
+
+            if (BeaconManager.getTier(b) == 1)
+            {
+                BeaconManager.setTier(b, 2);
+                player.sendMessage(ChatColor.GREEN + "You upgraded your beacon to tier " + BeaconManager.getTier(b));
+                gui.updateItem(13, beacon);
+            } else if (BeaconManager.getTier(b) == 2)
+            {
+                BeaconManager.setTier(b, 3);
+                player.sendMessage(ChatColor.GREEN + "You upgraded your beacon to tier " + BeaconManager.getTier(b));
+                gui.updateItem(13, beacon);
+            }
+        });
+
+        gui.open(player);
     }
 
 }
