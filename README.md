@@ -1,1 +1,1 @@
-UniqueBeacons is a unique beacons minecraft plugin.
+UniqueBeacons is a unique minecraft beacons plugin.
