@@ -2,7 +2,7 @@ package ga.uniquecoding.uniquebeacons.events;
 
 import ga.uniquecoding.uniquebeacons.UniqueBeacons;
 import ga.uniquecoding.uniquebeacons.files.BeaconConfig;
-import ga.uniquecoding.uniquebeacons.guis.Menu;
+import ga.uniquecoding.uniquebeacons.guis.GUI;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Beacon;
@@ -12,8 +12,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-
-import java.io.IOException;
 
 public class BeaconListener implements Listener
 {
@@ -41,7 +39,7 @@ public class BeaconListener implements Listener
                 if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
                 {
                     event.setCancelled(true);
-                    Menu.openMainMenu(player, beacon);
+                    GUI.openMainMenu(player, beacon);
                 }
 
             }
